@@ -44,7 +44,8 @@
         <div id="invalidUrlNote">
             <h3>Please provide the name in the 'vistar' property of the query string!</h3>
             For example: <a id="exampleNote"></a><br/><br/>
-            You can also use the 'len' property to define a custom reload length, in milliseconds (5000 is the default).
+            You can also use the 'len' property to define a custom reload length, in milliseconds (5000 is the default).<br/><br/>
+            If a Vistar you'd like to display isn't at the usual vistar-capture domain, supply the entire URL in the 'vistar' property instead.
         </div>
 
         <img class="vistar-image" id="vistar"></img>
@@ -56,6 +57,14 @@
             var vistar = params.get('vistar');
             var len = parseInt(params.get('len')) || 5000;
 
+            function getVistarUrl(base){
+                if (base.indexOf('http') != -1) {
+                    return base;
+                } else {
+                    return "https://vistar-capture.s3.cern.ch/" + base + ".png";
+                }
+            }
+
             if (!vistar) {
                 var exampleNoteElement = document.getElementById('exampleNote');
                 exampleNoteElement.textContent = window.location.href + "?vistar=lhc1";
@@ -65,11 +74,11 @@
             } else {
                 invalidUrlNoteElement.remove();
 
-                vistarElement.src = "https://vistar-capture.s3.cern.ch/" + vistar + ".png";
+                vistarElement.src = getVistarUrl(vistar);
                 console.log(vistarElement.src);
 
                 setInterval(() => {
-                    vistarElement.src = "https://vistar-capture.s3.cern.ch/" + vistar + ".png?" + Math.floor(Date.now()/1000);
+                    vistarElement.src = getVistarUrl(vistar) + "?" + Math.floor(Date.now()/1000);
                 }, len);
             }
         </script>
