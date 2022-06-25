@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CERN Vistars</title>
+        <meta name="description" content="An unofficial CERN vistar viewer for applications that embed webpages">
+
+        <style>
+            html * {
+                font-family: sans-serif;
+                color: white;
+            }
+            a {
+                color: lightblue;
+            }
+            body {
+                background-color: black;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+
+            .vistar-image {
+                min-width: 100%;
+                max-width: 100%;
+                max-height: 100%;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+                overflow: auto;
+                position: fixed;
+                right: 0;
+                top: 0;
+                -o-object-fit: contain;
+                object-fit: contain;
+
+                image-rendering: pixelated;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="invalidUrlNote">
+            <h3>Please provide the name in the 'vistar' property of the query string!</h3>
+            For example: <a id="exampleNote"></a><br/><br/>
+            You can also use the 'len' property to define a custom reload length, in milliseconds (5000 is the default).
+        </div>
+
+        <img class="vistar-image" id="vistar"></img>
+
+        <script>
+            var invalidUrlNoteElement = document.getElementById('invalidUrlNote');
+            var vistarElement = document.getElementById('vistar');
+            var params = new URLSearchParams(window.location.search);
+            var vistar = params.get('vistar');
+            var len = parseInt(params.get('len')) || 5000;
+
+            if (!vistar) {
+                var exampleNoteElement = document.getElementById('exampleNote');
+                exampleNoteElement.textContent = window.location.href + "?vistar=lhc1";
+                exampleNoteElement.href = exampleNoteElement.textContent;
+
+                vistarElement.remove();
+            } else {
+                invalidUrlNoteElement.remove();
+
+                vistarElement.src = "https://vistar-capture.s3.cern.ch/" + vistar + ".png";
+                console.log(vistarElement.src);
+
+                setInterval(() => {
+                    vistarElement.src = "https://vistar-capture.s3.cern.ch/" + vistar + ".png?" + Math.floor(Date.now()/1000);
+                }, len);
+            }
+        </script>
+    </body>
+</html>
