@@ -1,5 +1,5 @@
 # cern-panels
-Full screen and automatically updating CERN Vistars for external page embeds that support JavaScript
+Full screen/automatically updating CERN Vistar viewer for external page embeds that support JavaScript
 
 View live [here](https://the-sink.github.io/cern-panels/)!
 
